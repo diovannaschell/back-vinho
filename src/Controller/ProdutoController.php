@@ -6,6 +6,7 @@
 
 namespace App\Controller;
 
+use App\Validator\ProdutoValidator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +28,9 @@ class ProdutoController
     public function save(Request $request): Response
     {
         $dados = $request->request->all();
+        $validador = new ProdutoValidator();
+        $erros = $validador->validate($dados);
+        dd($erros);
 
         return new JsonResponse([], Response::HTTP_CREATED);
     }
