@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validation;
 
-class ProdutoValidator
+class VinhoValidator
 {
     public function validate(array $input): ConstraintViolationList
     {

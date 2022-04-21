@@ -13,9 +13,9 @@ class ItemPedido
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: Produto::class)]
+    #[ORM\ManyToOne(targetEntity: Vinho::class)]
     #[ORM\JoinColumn(nullable: false)]
-    private $produto;
+    private $vinho;
 
     #[ORM\Column(type: 'integer')]
     private $quantidade;
@@ -32,14 +32,14 @@ class ItemPedido
         return $this->id;
     }
 
-    public function getProduto(): ?Produto
+    public function getVinho(): ?Vinho
     {
-        return $this->produto;
+        return $this->vinho;
     }
 
-    public function setProduto(?Produto $produto): self
+    public function setVinho(?Vinho $vinho): self
     {
-        $this->produto = $produto;
+        $this->vinho = $vinho;
 
         return $this;
     }

@@ -2,30 +2,30 @@
 
 namespace App\Repository;
 
-use App\Entity\Produto;
+use App\Entity\Vinho;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Produto|null find($id, $lockMode = null, $lockVersion = null)
- * @method Produto|null findOneBy(array $criteria, array $orderBy = null)
- * @method Produto[]    findAll()
- * @method Produto[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Vinho|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Vinho|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Vinho[]    findAll()
+ * @method Vinho[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ProdutoRepository extends ServiceEntityRepository
+class VinhoRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Produto::class);
+        parent::__construct($registry, Vinho::class);
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(Produto $entity, bool $flush = true): void
+    public function add(Vinho $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
         if ($flush) {
@@ -37,7 +37,7 @@ class ProdutoRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(Produto $entity, bool $flush = true): void
+    public function remove(Vinho $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
         if ($flush) {

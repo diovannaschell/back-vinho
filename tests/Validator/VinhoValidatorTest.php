@@ -2,18 +2,18 @@
 
 namespace App\Tests\Validator;
 
-use App\Validator\ProdutoValidator;
+use App\Validator\VinhoValidator;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class ProdutoValidatorTest extends WebTestCase
+class VinhoValidatorTest extends WebTestCase
 {
     private array $data;
 
-    public ProdutoValidator $validator;
+    public VinhoValidator $validator;
 
     public function setUp(): void
     {
-        $this->validator = new ProdutoValidator();
+        $this->validator = new VinhoValidator();
 
         $this->data = [
             'nome' => 'vinho de teste',
