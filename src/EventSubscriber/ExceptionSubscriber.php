@@ -22,25 +22,20 @@ final class ExceptionSubscriber implements EventSubscriberInterface
     {
         $exception = $event->getThrowable();
 
-        $response = new JsonResponse();
         if ($exception instanceof VinhoException) {
-            $response->setJson(
-                json_encode(
-                    [
-                        'mensagem' => $event->getThrowable()->getMessage(),
-                    ]
-                )
+            $response = new JsonResponse(
+                [
+                    'mensagem' => $event->getThrowable()->getMessage(),
+                ],
+                $event->getThrowable()->getCode()
             );
-            $response->setStatusCode($event->getThrowable()->getCode());
         } else {
-            $response->setJson(
-                json_encode(
-                    [
-                        'mensagem' => 'Ocorreu um erro ao processar a sua requisição. Tente novamente!',
-                    ]
-                )
+            $response = new JsonResponse(
+                [
+                    'mensagem' => 'Ocorreu um erro ao processar a sua requisição. Tente novamente!',
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
             );
-            $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $event->setResponse($response);
