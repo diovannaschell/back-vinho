@@ -11,12 +11,8 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class FreteService
 {
-
-    private VinhoService $vinhoService;
-
-    public function __construct(VinhoService $vinhoService)
+    public function __construct(private VinhoService $vinhoService)
     {
-        $this->vinhoService = $vinhoService;
     }
 
     /**

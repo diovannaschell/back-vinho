@@ -19,14 +19,8 @@ class PedidoService
 {
     private PedidoRepository $repository;
 
-    private FreteService $freteService;
-
-    private ItensPedidoService $itensPedidoService;
-
-    public function __construct(EntityManagerInterface $entityManager, FreteService $freteService, ItensPedidoService $itensPedidoService)
+    public function __construct(EntityManagerInterface $entityManager, private FreteService $freteService, private ItensPedidoService $itensPedidoService)
     {
-        $this->freteService = $freteService;
-        $this->itensPedidoService = $itensPedidoService;
         $this->repository = $entityManager->getRepository(Pedido::class);
     }
 

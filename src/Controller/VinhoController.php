@@ -16,14 +16,8 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class VinhoController extends AbstractController
 {
-    private VinhoService $vinhoService;
-
-    private NormalizerInterface $normalizer;
-
-    public function __construct(VinhoService $vinhoService, NormalizerInterface $normalizer)
+    public function __construct(private VinhoService $vinhoService, private NormalizerInterface $normalizer)
     {
-        $this->vinhoService = $vinhoService;
-        $this->normalizer = $normalizer;
     }
 
     #[Route('/vinho', name: 'app_vinho_list', methods: ['GET'])]

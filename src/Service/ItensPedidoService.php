@@ -17,16 +17,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ItensPedidoService
 {
-    private EntityManagerInterface $entityManager;
-
     private ItemPedidoRepository $repository;
 
-    private VinhoService $vinhoService;
-
-    public function __construct(EntityManagerInterface $entityManager, VinhoService $vinhoService)
+    public function __construct(EntityManagerInterface $entityManager, private VinhoService $vinhoService)
     {
-        $this->entityManager = $entityManager;
-        $this->vinhoService = $vinhoService;
         $this->repository = $entityManager->getRepository(ItemPedido::class);
     }
 

@@ -17,14 +17,9 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class PedidoController extends AbstractController
 {
-    private PedidoService $pedidoService;
 
-    private NormalizerInterface $normalizer;
-
-    public function __construct(PedidoService $pedidoService, NormalizerInterface $normalizer)
+    public function __construct(private PedidoService $pedidoService, private NormalizerInterface $normalizer)
     {
-        $this->pedidoService = $pedidoService;
-        $this->normalizer = $normalizer;
     }
 
     #[Route('/pedido', name: 'app_pedido_list', methods: ['GET'])]
