@@ -11,13 +11,11 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class FreteService
 {
-    private EntityManagerInterface $entityManager;
 
     private VinhoService $vinhoService;
 
-    public function __construct(EntityManagerInterface $entityManager, VinhoService $vinhoService)
+    public function __construct(VinhoService $vinhoService)
     {
-        $this->entityManager = $entityManager;
         $this->vinhoService = $vinhoService;
     }
 

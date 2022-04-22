@@ -21,18 +21,21 @@ class PedidoValidator
                 new Assert\Type(['type' => 'numeric']),
                 new Assert\GreaterThan(0),
             ],
-            'itensPedido' => new Assert\All([
-                new Assert\Collection([
-                    'vinhoId' => [
-                        new Assert\Type(['type' => 'int']),
-                        new Assert\NotBlank(),
-                    ],
-                    'quantidade' => [
-                        new Assert\Type(['type' => 'int']),
-                        new Assert\GreaterThan(0),
-                    ],
-                ])
-            ]),
+            'itensPedido' => [
+                new Assert\Count(['min' => 1]),
+                new Assert\All([
+                    new Assert\Collection([
+                        'vinhoId' => [
+                            new Assert\Type(['type' => 'int']),
+                            new Assert\NotBlank()
+                        ],
+                        'quantidade' => [
+                            new Assert\Type(['type' => 'int']),
+                            new Assert\GreaterThan(0),
+                        ],
+                    ])
+                ]),
+            ]
         ]);
 
         $violations = $validator->validate($input, $constraints, null);
