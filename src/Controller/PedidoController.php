@@ -6,8 +6,10 @@
 
 namespace App\Controller;
 
+use App\Exception\VinhoException;
 use App\Service\FreteService;
 use App\Service\PedidoService;
+use App\Validator\PedidoValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +27,7 @@ class PedidoController extends AbstractController
     #[Route('/pedido', name: 'app_pedido_list', methods: ['GET'])]
     public function list(): Response
     {
-        $pedidos = $this->pedidoService->listPedidos();
+        $pedidos = $this->pedidoService->list();
         $pedidosNormalizados = $this->normalizer->normalize($pedidos, null, ['groups' => 'pedido']);
 
         return new JsonResponse($pedidosNormalizados, Response::HTTP_OK);
@@ -35,9 +37,9 @@ class PedidoController extends AbstractController
     public function create(Request $request): Response
     {
         $dados = $request->request->all();
-        $this->pedidoService->validatePedidoRequest($dados);
+        $this->validatePedidoRequest($dados);
 
-        $pedido = $this->pedidoService->createPedido($dados);
+        $pedido = $this->pedidoService->create($dados);
         $pedidoNormalizado = $this->normalizer->normalize($pedido, null, ['groups' => 'pedido']);
 
         return new JsonResponse($pedidoNormalizado, Response::HTTP_CREATED);
@@ -47,10 +49,26 @@ class PedidoController extends AbstractController
     public function calcularFrete(Request $request, FreteService $freteService)
     {
         $dados = $request->request->all();
-        $this->pedidoService->validatePedidoRequest($dados);
+        $this->validatePedidoRequest($dados);
 
         $frete = $freteService->calcularFrete($dados['itensPedido'], $dados['distancia']);
 
         return new JsonResponse(['frete' => $frete], Response::HTTP_OK);
+    }
+
+    /**
+     * Valida os campos da requisição com o validador de pedidos
+     * 
+     * @param array $dados
+     * @return void
+     */
+    private function validatePedidoRequest(array $dados): void
+    {
+        $validador = new PedidoValidator();
+        $erros = $validador->validate($dados);
+
+        if (count($erros) > 0) {
+            throw new VinhoException('Existem dados inválidos na requisição.', Response::HTTP_BAD_REQUEST);
+        }
     }
 }

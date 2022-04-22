@@ -9,7 +9,6 @@ namespace App\Service;
 use App\Entity\Vinho;
 use App\Exception\VinhoException;
 use App\Repository\VinhoRepository;
-use App\Validator\VinhoValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +27,7 @@ class VinhoService
      * 
      * @return Vinho[]
      */
-    public function listVinhos(): array
+    public function list(): array
     {
         return $this->repository->findAll();
     }
@@ -39,7 +38,7 @@ class VinhoService
      * @param array $dados
      * @return Vinho
      */
-    public function createVinho(array $dados): Vinho
+    public function create(array $dados): Vinho
     {
         $vinho = new Vinho();
         $vinho->setNome($dados['nome'])
@@ -63,7 +62,7 @@ class VinhoService
      * @param array $dados
      * @return Vinho
      */
-    public function editVinho(int $id, array $dados): Vinho
+    public function edit(int $id, array $dados): Vinho
     {
         $vinho = $this->findVinhoOrThrowException($id);
 
@@ -83,7 +82,7 @@ class VinhoService
      * @param int $id
      * @return void
      */
-    public function deleteVinho(int $id): void
+    public function delete(int $id): void
     {
         $vinho = $this->findVinhoOrThrowException($id);
 
@@ -91,22 +90,6 @@ class VinhoService
             $this->repository->remove($vinho);
         } catch (Exception $e) {
             throw new VinhoException('Não foi possível deletar o vinho.', Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    /**
-     * Valida os campos da requisição com o validador de vinhos
-     * 
-     * @param array $dados
-     * @return void
-     */
-    public function validateVinhoRequest(array $dados): void
-    {
-        $validador = new VinhoValidator();
-        $erros = $validador->validate($dados);
-
-        if (count($erros) > 0) {
-            throw new VinhoException('Existem dados inválidos na requisição.', Response::HTTP_BAD_REQUEST);
         }
     }
 

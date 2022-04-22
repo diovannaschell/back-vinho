@@ -9,7 +9,6 @@ namespace App\Service;
 use App\Entity\Pedido;
 use App\Exception\VinhoException;
 use App\Repository\PedidoRepository;
-use App\Validator\PedidoValidator;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -29,7 +28,7 @@ class PedidoService
      * 
      * @return Pedido[]
      */
-    public function listPedidos(): array
+    public function list(): array
     {
         return $this->repository->findAll();
     }
@@ -40,7 +39,7 @@ class PedidoService
      * @param array $dados
      * @return Pedido
      */
-    public function createPedido(array $dados): Pedido
+    public function create(array $dados): Pedido
     {
         $frete = $this->freteService->calcularFrete($dados['itensPedido'], $dados['distancia']);
 
@@ -48,8 +47,12 @@ class PedidoService
         $pedido->setData(new DateTime('now'))
             ->setValorFrete($frete);
 
-        $this->itensPedidoService->createItensPedido($dados['itensPedido'], $pedido);
-        $valorItens = $this->itensPedidoService->calcularValorItens($pedido);
+        foreach ($dados['itensPedido'] as $itemPedido) {
+            $item = $this->itensPedidoService->create($itemPedido, $pedido);
+            $pedido->addItemPedido($item);
+        }
+
+        $valorItens = $this->calcularValorItens($pedido);
 
         $total = $frete + $valorItens;
         $pedido->setTotal($total);
@@ -64,18 +67,20 @@ class PedidoService
     }
 
     /**
-     * Valida os campos da requisição com o validador de pedidos
+     * Calcula o valor total do item para a quantidade selecionada.
      * 
-     * @param array $dados
-     * @return void
+     * @param Pedido $pedido
+     * @return float
      */
-    public function validatePedidoRequest(array $dados): void
+    private function calcularValorItens(Pedido $pedido): float
     {
-        $validador = new PedidoValidator();
-        $erros = $validador->validate($dados);
+        $itensPedido = $pedido->getItemPedidos();
+        $valor = 0;
 
-        if (count($erros) > 0) {
-            throw new VinhoException('Existem dados inválidos na requisição.', Response::HTTP_BAD_REQUEST);
+        foreach ($itensPedido as $item) {
+            $valor += $item->getValorUnitario() * $item->getQuantidade();
         }
+
+        return $valor;
     }
 }

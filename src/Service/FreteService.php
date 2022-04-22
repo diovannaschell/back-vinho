@@ -6,9 +6,6 @@
 
 namespace App\Service;
 
-use App\Entity\Vinho;
-use Doctrine\ORM\EntityManagerInterface;
-
 class FreteService
 {
     public function __construct(private VinhoService $vinhoService)

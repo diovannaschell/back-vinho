@@ -6,7 +6,9 @@
 
 namespace App\Controller;
 
+use App\Exception\VinhoException;
 use App\Service\VinhoService;
+use App\Validator\VinhoValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +25,7 @@ class VinhoController extends AbstractController
     #[Route('/vinho', name: 'app_vinho_list', methods: ['GET'])]
     public function list(): Response
     {
-        $vinhos = $this->vinhoService->listVinhos();
+        $vinhos = $this->vinhoService->list();
         $vinhosNormalizados = $this->normalizer->normalize($vinhos);
 
         return new JsonResponse($vinhosNormalizados, Response::HTTP_OK);
@@ -33,9 +35,9 @@ class VinhoController extends AbstractController
     public function create(Request $request): Response
     {
         $dados = $request->request->all();
-        $this->vinhoService->validateVinhoRequest($dados);
+        $this->validateVinhoRequest($dados);
 
-        $vinho = $this->vinhoService->createVinho($dados);
+        $vinho = $this->vinhoService->create($dados);
         $vinhoNormalizado = $this->normalizer->normalize($vinho);
 
         return new JsonResponse($vinhoNormalizado, Response::HTTP_CREATED);
@@ -45,9 +47,9 @@ class VinhoController extends AbstractController
     public function edit(Request $request, $id): Response
     {
         $dados = $request->request->all();
-        $this->vinhoService->validateVinhoRequest($dados);
+        $this->validateVinhoRequest($dados);
 
-        $vinho = $this->vinhoService->editVinho($id, $dados);
+        $vinho = $this->vinhoService->edit($id, $dados);
         $vinhoNormalizado = $this->normalizer->normalize($vinho);
 
         return new JsonResponse($vinhoNormalizado, Response::HTTP_OK);
@@ -56,8 +58,24 @@ class VinhoController extends AbstractController
     #[Route('/vinho/{id}', name: 'app_vinho_delete', methods: ['DELETE'])]
     public function delete($id): Response
     {
-        $this->vinhoService->deleteVinho($id);
+        $this->vinhoService->delete($id);
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Valida os campos da requisição com o validador de vinhos
+     * 
+     * @param array $dados
+     * @return void
+     */
+    private function validateVinhoRequest(array $dados): void
+    {
+        $validador = new VinhoValidator();
+        $erros = $validador->validate($dados);
+
+        if (count($erros) > 0) {
+            throw new VinhoException('Existem dados inválidos na requisição.', Response::HTTP_BAD_REQUEST);
+        }
     }
 }
