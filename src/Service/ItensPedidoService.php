@@ -8,7 +8,6 @@ namespace App\Service;
 
 use App\Entity\ItemPedido;
 use App\Entity\Pedido;
-use App\Entity\Vinho;
 use App\Exception\VinhoException;
 use App\Repository\ItemPedidoRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,46 +26,27 @@ class ItensPedidoService
     /**
      * Cria um item de um pedido
      * 
-     * @param array $itensPedido
+     * @param array $itemPedido
      * @param Pedido $pedido
-     * @return void
+     * @param bool $flush
+     * @return ItemPedido
      */
-    public function createItensPedido(array $itensPedido, Pedido $pedido): void
+    public function create(array $itemPedido, Pedido $pedido, bool $flush = false): ItemPedido
     {
-        foreach ($itensPedido as $itemPedido) {
-            $vinho = $this->vinhoService->findVinhoOrThrowException($itemPedido['vinhoId']);
+        $vinho = $this->vinhoService->findVinhoOrThrowException($itemPedido['vinhoId']);
 
-            $item = new ItemPedido();
-            $item->setQuantidade($itemPedido['quantidade'])
-                ->setVinho($vinho)
-                ->setPedido($pedido)
-                ->setValorUnitario($vinho->getValor());
+        $item = new ItemPedido();
+        $item->setQuantidade($itemPedido['quantidade'])
+            ->setVinho($vinho)
+            ->setPedido($pedido)
+            ->setValorUnitario($vinho->getValor());
 
-            try {
-                $this->repository->add($item, false);
-            } catch (Exception $e) {
-                throw new VinhoException('Não foi possível salvar o item do pedido.', Response::HTTP_INTERNAL_SERVER_ERROR);
-            }
-
-            $pedido->addItemPedido($item);
-        }
-    }
-
-    /**
-     * Calcula o valor total do item para a quantidade selecionada.
-     * 
-     * @param Pedido $pedido
-     * @return float
-     */
-    public function calcularValorItens(Pedido $pedido): float
-    {
-        $itensPedido = $pedido->getItemPedidos();
-        $valor = 0;
-
-        foreach ($itensPedido as $item) {
-            $valor += $item->getValorUnitario() * $item->getQuantidade();
+        try {
+            $this->repository->add($item, $flush);
+        } catch (Exception $e) {
+            throw new VinhoException('Não foi possível salvar o item do pedido.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $valor;
+        return $item;
     }
 }
