@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\VinhoRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: VinhoRepository::class)]
 class Vinho
@@ -11,15 +12,19 @@ class Vinho
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['pedido'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 100)]
+    #[Groups(['pedido'])]
     private $nome;
 
     #[ORM\Column(type: 'string', length: 100)]
+    #[Groups(['pedido'])]
     private $tipo;
 
     #[ORM\Column(type: 'float')]
+    #[Groups(['pedido'])]
     private $peso;
 
     #[ORM\Column(type: 'float')]

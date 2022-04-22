@@ -26,7 +26,7 @@ class VinhoService
     /**
      * Lista todos os vinhos
      * 
-     * @return Vinhos[]
+     * @return Vinho[]
      */
     public function listVinhos(): array
     {
@@ -65,11 +65,7 @@ class VinhoService
      */
     public function editVinho(int $id, array $dados): Vinho
     {
-        $vinho = $this->repository->find($id);
-
-        if (!$vinho) {
-            throw new VinhoException('O vinho informado não existe.', Response::HTTP_NOT_FOUND);
-        }
+        $vinho = $this->findVinhoOrThrowException($id);
 
         $vinho->setNome($dados['nome'])
             ->setPeso($dados['peso'])
@@ -89,11 +85,7 @@ class VinhoService
      */
     public function deleteVinho(int $id): void
     {
-        $vinho = $this->repository->find($id);
-
-        if (!$vinho) {
-            throw new VinhoException('O vinho informado não existe.', Response::HTTP_NOT_FOUND);
-        }
+        $vinho = $this->findVinhoOrThrowException($id);
 
         try {
             $this->repository->remove($vinho);
@@ -116,5 +108,23 @@ class VinhoService
         if (count($erros) > 0) {
             throw new VinhoException('Existem dados inválidos na requisição.', Response::HTTP_BAD_REQUEST);
         }
+    }
+
+    /**
+     * Busca um vinho pelo id e se não encontrar dá uma exception.
+     * 
+     * @param int $id
+     * @return Vinho
+     * @throws VinhoException
+     */
+    public function findVinhoOrThrowException(int $id): Vinho
+    {
+        $vinho = $this->repository->find($id);
+
+        if (!$vinho) {
+            throw new VinhoException('O vinho informado não existe.', Response::HTTP_NOT_FOUND);
+        }
+
+        return $vinho;
     }
 }

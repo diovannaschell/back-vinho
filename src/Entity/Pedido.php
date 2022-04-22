@@ -6,6 +6,7 @@ use App\Repository\PedidoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PedidoRepository::class)]
 class Pedido
@@ -13,18 +14,23 @@ class Pedido
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['pedido'])]
     private $id;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['pedido'])]
     private $data;
 
     #[ORM\Column(type: 'float')]
+    #[Groups(['pedido'])]
     private $valorFrete;
 
     #[ORM\Column(type: 'float')]
+    #[Groups(['pedido'])]
     private $total;
 
-    #[ORM\OneToMany(mappedBy: 'pedido', targetEntity: ItemPedido::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'pedido', targetEntity: ItemPedido::class, orphanRemoval: true, cascade: ['persist'])]
+    #[Groups(['pedido'])]
     private $itemPedidos;
 
     public function __construct()

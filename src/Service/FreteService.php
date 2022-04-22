@@ -13,24 +13,27 @@ class FreteService
 {
     private EntityManagerInterface $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    private VinhoService $vinhoService;
+
+    public function __construct(EntityManagerInterface $entityManager, VinhoService $vinhoService)
     {
         $this->entityManager = $entityManager;
+        $this->vinhoService = $vinhoService;
     }
 
     /**
      * Calcula o valor do frete com base nos vinhos selecionados e distância informada
      * 
-     * @param array $vinhosSelecionados
+     * @param array $itensPedido
      * @param float $distancia
      */
-    public function calcularFrete(array $vinhosSelecionados, float $distancia): float
+    public function calcularFrete(array $itensPedido, float $distancia): float
     {
         $pesoProdutos = 0;
 
-        foreach ($vinhosSelecionados as $vinhoSelecionado) {
-            $vinho = $this->entityManager->getRepository(Vinho::class)->find($vinhoSelecionado['id']);
-            $pesoProdutos += $vinho->getPeso() * $vinhoSelecionado['quantidade'];
+        foreach ($itensPedido as $item) {
+            $vinho = $this->vinhoService->findVinhoOrThrowException($item['vinhoId']);
+            $pesoProdutos += $vinho->getPeso() * $item['quantidade'];
         }
 
         $valor = $pesoProdutos * 5;

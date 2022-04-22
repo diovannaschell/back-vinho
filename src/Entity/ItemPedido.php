@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ItemPedidoRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ItemPedidoRepository::class)]
 class ItemPedido
@@ -11,16 +12,20 @@ class ItemPedido
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['pedido'])]
     private $id;
 
     #[ORM\ManyToOne(targetEntity: Vinho::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['pedido'])]
     private $vinho;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['pedido'])]
     private $quantidade;
 
     #[ORM\Column(type: 'float')]
+    #[Groups(['pedido'])]
     private $valorUnitario;
 
     #[ORM\ManyToOne(targetEntity: Pedido::class, inversedBy: 'itemPedidos')]

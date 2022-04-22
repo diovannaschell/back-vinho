@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Validator;
+namespace App\Tests\Service;
 
 use App\Entity\Vinho;
 use App\Service\FreteService;
@@ -28,18 +28,18 @@ class FreteServiceTest extends TestCase
             ->willReturn($vinho);
 
         // criar mock do entity manager
-        $objectManager = $this->createMock(EntityManager::class);
-        $objectManager->expects($this->any())
+        $entityManager = $this->createMock(EntityManager::class);
+        $entityManager->expects($this->any())
             ->method('getRepository')
             ->willReturn($vinhoRepository);
 
-        $this->freteService = new FreteService($objectManager);
+        $this->freteService = new FreteService($entityManager);
     }
 
     public function testDeveCalcularFreteComDistanciaMenor100km()
     {
         $frete = $this->freteService->calcularFrete(
-            [['id' => 1, 'quantidade' => 2]],
+            [['vinhoId' => 1, 'quantidade' => 2]],
             80
         );
 
@@ -49,7 +49,7 @@ class FreteServiceTest extends TestCase
     public function testDeveCalcularFreteComDistanciaMaior100km()
     {
         $frete = $this->freteService->calcularFrete(
-            [['id' => 1, 'quantidade' => 2]],
+            [['vinhoId' => 1, 'quantidade' => 2]],
             150
         );
 
