@@ -6,8 +6,10 @@
 
 namespace App\Service;
 
+use App\Entity\Pedido;
 use App\Entity\Vinho;
 use App\Exception\VinhoException;
+use App\Repository\PedidoRepository;
 use App\Repository\VinhoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -17,9 +19,12 @@ class VinhoService
 {
     private VinhoRepository $repository;
 
+    private PedidoRepository $pedidoRepository;
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->repository = $entityManager->getRepository(Vinho::class);
+        $this->pedidoRepository = $entityManager->getRepository(Pedido::class);
     }
 
     /**
@@ -85,6 +90,11 @@ class VinhoService
     public function delete(int $id): void
     {
         $vinho = $this->findVinhoOrThrowException($id);
+
+        $pedidos = $this->pedidoRepository->findByVinho($vinho);
+        if (count($pedidos) > 0) {
+            throw new VinhoException('Não é possível deletar o vinho pois já existem pedidos vinculados a ele.', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         try {
             $this->repository->remove($vinho);
