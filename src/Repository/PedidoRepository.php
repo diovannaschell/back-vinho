@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Pedido;
+use App\Entity\Vinho;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -45,22 +46,18 @@ class PedidoRepository extends ServiceEntityRepository
         }
     }
 
-    // /**
-    //  * @return Pedido[] Returns an array of Pedido objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Pedido[] Returns an array of Pedido objects
+     */
+    public function findByVinho(Vinho $vinho)
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
+            ->join('p.itemPedidos', 'i')
+            ->andWhere('i.vinho = :vinho')
+            ->setParameter('vinho', $vinho)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Pedido
