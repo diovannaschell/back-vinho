@@ -48,10 +48,12 @@ class PedidoController extends AbstractController
     #[Route('/pedido/calcular-frete', name: 'app_pedido_frete', methods: ['GET'])]
     public function calcularFrete(Request $request, FreteService $freteService)
     {
-        $dados = $request->request->all();
-        $this->validatePedidoRequest($dados);
+        $distancia = $request->query->get('distancia');
+        $itensPedido = json_decode($request->query->get('itensPedido'), true);
 
-        $frete = $freteService->calcularFrete($dados['itensPedido'], $dados['distancia']);
+        $this->validatePedidoRequest(['distancia' => $distancia, 'itensPedido' => $itensPedido]);
+
+        $frete = $freteService->calcularFrete($itensPedido, $distancia);
 
         return new JsonResponse(['frete' => $frete], Response::HTTP_OK);
     }
