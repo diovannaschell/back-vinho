@@ -30,4 +30,4 @@ RUN composer install
 
 EXPOSE 8000
 
-CMD ["symfony", "server:start"]
+CMD php bin/console doctrine:migrations:migrate && symfony server:start
