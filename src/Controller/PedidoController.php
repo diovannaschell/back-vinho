@@ -24,7 +24,7 @@ class PedidoController extends AbstractController
     {
     }
 
-    #[Route('/pedido', name: 'app_pedido_list', methods: ['GET'])]
+    #[Route('/pedidos', name: 'app_pedido_list', methods: ['GET'])]
     public function list(): Response
     {
         $pedidos = $this->pedidoService->list();
@@ -33,7 +33,7 @@ class PedidoController extends AbstractController
         return new JsonResponse($pedidosNormalizados, Response::HTTP_OK);
     }
 
-    #[Route('/pedido', name: 'app_pedido_create', methods: ['POST'])]
+    #[Route('/pedidos', name: 'app_pedido_create', methods: ['POST'])]
     public function create(Request $request): Response
     {
         $dados = $request->request->all();
@@ -45,7 +45,7 @@ class PedidoController extends AbstractController
         return new JsonResponse($pedidoNormalizado, Response::HTTP_CREATED);
     }
 
-    #[Route('/pedido/calcular-frete', name: 'app_pedido_frete', methods: ['GET'])]
+    #[Route('/pedidos/calcular-frete', name: 'app_pedido_frete', methods: ['GET'])]
     public function calcularFrete(Request $request, FreteService $freteService)
     {
         $distancia = $request->query->get('distancia');

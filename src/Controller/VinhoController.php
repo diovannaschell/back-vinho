@@ -22,7 +22,7 @@ class VinhoController extends AbstractController
     {
     }
 
-    #[Route('/vinho', name: 'app_vinho_list', methods: ['GET'])]
+    #[Route('/vinhos', name: 'app_vinho_list', methods: ['GET'])]
     public function list(): Response
     {
         $vinhos = $this->vinhoService->list();
@@ -31,7 +31,7 @@ class VinhoController extends AbstractController
         return new JsonResponse($vinhosNormalizados, Response::HTTP_OK);
     }
 
-    #[Route('/vinho', name: 'app_vinho_create', methods: ['POST'])]
+    #[Route('/vinhos', name: 'app_vinho_create', methods: ['POST'])]
     public function create(Request $request): Response
     {
         $dados = $request->request->all();
@@ -43,7 +43,7 @@ class VinhoController extends AbstractController
         return new JsonResponse($vinhoNormalizado, Response::HTTP_CREATED);
     }
 
-    #[Route('/vinho/{id}', name: 'app_vinho_edit', methods: ['PUT'])]
+    #[Route('/vinhos/{id}', name: 'app_vinho_edit', methods: ['PUT'])]
     public function edit(Request $request, $id): Response
     {
         $dados = $request->request->all();
@@ -55,7 +55,7 @@ class VinhoController extends AbstractController
         return new JsonResponse($vinhoNormalizado, Response::HTTP_OK);
     }
 
-    #[Route('/vinho/{id}', name: 'app_vinho_delete', methods: ['DELETE'])]
+    #[Route('/vinhos/{id}', name: 'app_vinho_delete', methods: ['DELETE'])]
     public function delete($id): Response
     {
         $this->vinhoService->delete($id);
